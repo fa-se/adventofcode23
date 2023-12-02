@@ -9,7 +9,12 @@ import (
 
 func main() {
 	file, _ := os.Open("input.txt")
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(file)
 
 	re := regexp.MustCompile("(one|two|three|four|five|six|seven|eight|nine|\\d)")
 
