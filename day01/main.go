@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	file, _ := os.Open("input/day1.txt")
+	file, _ := os.Open("input.txt")
 	defer file.Close()
 
 	re := regexp.MustCompile("(one|two|three|four|five|six|seven|eight|nine|\\d)")
