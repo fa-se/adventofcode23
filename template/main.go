@@ -37,6 +37,7 @@ type LineResult struct {
 func parseLine(line string) LineData {
 	data := LineData{}
 	// Parsing logic
+	_ = line
 	return data
 }
 
@@ -44,6 +45,7 @@ func parseLine(line string) LineData {
 func processLine(data LineData) LineResult {
 	result := LineResult{}
 	// Processing logic
+	_ = data
 	return result
 }
 
