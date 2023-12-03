@@ -112,8 +112,21 @@ func processResults(results []LineResult) (int, int) {
 		// append symbols from all three lines
 		symbols := append(append(previousLine.symbols, currentLine.symbols...), nextLine.symbols...)
 		for _, number := range currentLine.numbers {
-			if isAdjacent(number, symbols) {
-				part1 += number.number
+			for _, symbol := range symbols {
+				if isAdjacent(number, symbol) {
+					part1 += number.number
+				}
+			}
+		}
+
+		// append numbers from all three lines
+		numbers := append(append(previousLine.numbers, currentLine.numbers...), nextLine.numbers...)
+		for _, symbol := range currentLine.symbols {
+			if symbol.char == '*' {
+				adjacentNumbers := getAdjacentNumbers(symbol, numbers)
+				if len(adjacentNumbers) == 2 {
+					part2 += adjacentNumbers[0].number * adjacentNumbers[1].number
+				}
 			}
 		}
 	}
@@ -121,11 +134,21 @@ func processResults(results []LineResult) (int, int) {
 	return part1, part2
 }
 
-func isAdjacent(number Number, symbols []Symbol) bool {
-	for _, symbol := range symbols {
-		if symbol.idx >= number.startIdx-1 && symbol.idx <= number.stopIdx+1 {
-			return true
+func getAdjacentNumbers(symbol Symbol, numbers []Number) []Number {
+	adjacentNumbers := []Number{}
+
+	for _, number := range numbers {
+		if isAdjacent(number, symbol) {
+			adjacentNumbers = append(adjacentNumbers, number)
 		}
+	}
+
+	return adjacentNumbers
+}
+
+func isAdjacent(number Number, symbol Symbol) bool {
+	if symbol.idx >= number.startIdx-1 && symbol.idx <= number.stopIdx+1 {
+		return true
 	}
 	return false
 }
