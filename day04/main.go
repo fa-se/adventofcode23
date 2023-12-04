@@ -42,7 +42,8 @@ func (c Card) String() string {
 }
 
 type LineResult struct {
-	value int
+	value   int
+	matches []int
 }
 
 func parseLine(line string) Card {
@@ -92,6 +93,7 @@ func processLine(data Card) LineResult {
 
 	if len(matches) > 0 {
 		result.value = int(math.Pow(2, float64(len(matches)-1)))
+		result.matches = matches
 	}
 
 	return result
@@ -99,9 +101,20 @@ func processLine(data Card) LineResult {
 
 func processResults(results []LineResult) (int, int) {
 	var part1, part2 int
-
-	for _, result := range results {
+	// for part 2, we need to keep track of how many instances we have of each card
+	cardInstanceCounts := make([]int, len(results))
+	for i, result := range results {
+		// part 1
 		part1 += result.value
+
+		cardInstanceCounts[i] += 1
+		// given j matches, we get an additional copy of the j cards following our current card
+		for j, _ := range result.matches {
+			// because this effect accumulates, we get one additional card per # of instances of the current card
+			cardInstanceCounts[i+j+1] += cardInstanceCounts[i]
+		}
+		part2 += cardInstanceCounts[i]
+
 	}
 
 	return part1, part2
